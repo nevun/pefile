@@ -2696,10 +2696,11 @@ class PE:
 
             reloc_type = (word>>12)
             reloc_offset = (word & 0x0fff)
-            if (reloc_offset, reloc_type) in offsets_and_type:
+            # skip reloc type 0, it is used for padding, see pecoff_v83.docx, page 107
+            if reloc_type and (reloc_offset, reloc_type) in offsets_and_type:
                 self.__warnings.append(
                     'Overlapping offsets in relocation data ' +
-                    'data at RVA: 0x%x' % (reloc_offset+rva))
+                    'at RVA: 0x%x' % (reloc_offset+rva))
                 break
             if len(offsets_and_type) >= 1000:
                 offsets_and_type.pop()
